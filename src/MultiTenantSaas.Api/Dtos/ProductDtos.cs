@@ -4,16 +4,16 @@ using MultiTenantSaas.Domain.Entities;
 namespace MultiTenantSaas.Api.Dtos;
 
 public record CreateProductRequest(
-    [property: Required, MaxLength(200)] string Name,
-    [property: MaxLength(2000)] string? Description,
-    [property: Range(0, double.MaxValue)] decimal Price,
-    [property: Range(0, int.MaxValue)] int StockQuantity);
+    [Required, MaxLength(200)] string Name,
+    [MaxLength(2000)] string? Description,
+    [Range(0, double.MaxValue)] decimal Price,
+    [Range(0, int.MaxValue)] int StockQuantity);
 
 public record UpdateProductRequest(
-    [property: Required, MaxLength(200)] string Name,
-    [property: MaxLength(2000)] string? Description,
-    [property: Range(0, double.MaxValue)] decimal Price,
-    [property: Range(0, int.MaxValue)] int StockQuantity);
+    [Required, MaxLength(200)] string Name,
+    [MaxLength(2000)] string? Description,
+    [Range(0, double.MaxValue)] decimal Price,
+    [Range(0, int.MaxValue)] int StockQuantity);
 
 public record ProductResponse(
     Guid Id,
