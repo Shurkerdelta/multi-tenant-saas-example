@@ -1,0 +1,12 @@
+## .NET
+bin/
+obj/
+*.user
+.vs/
+
+## Rider / VS Code
+.idea/
+.vscode/
+
+## Docker volumes (postgres data is a named volume, not bind-mounted, but just in case)
+pgdata/
