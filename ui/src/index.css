@@ -128,6 +128,40 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .full-page-card h1 { font-size: 1.3rem; }
 .full-page-card p { color: var(--ink-soft); margin-bottom: 20px; }
 
+/* ---------- Tenant picker (customers with no fixed tenant) ---------- */
+.picker-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+  max-width: 480px;
+  width: 100%;
+  text-align: left;
+}
+.picker-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.picker-head h1 { font-size: 1.25rem; margin-bottom: 4px; }
+.picker-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.picker-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  text-align: left;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+}
+.picker-item:hover { background: var(--surface-inset); border-color: var(--accent); }
+.picker-name { font-weight: 500; }
+.picker-slug { color: var(--ink-faint); font-size: 0.8rem; }
+
 /* ---------- App shell ---------- */
 .shell { min-height: 100vh; display: flex; flex-direction: column; }
 
