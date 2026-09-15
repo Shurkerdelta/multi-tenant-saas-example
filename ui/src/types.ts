@@ -5,6 +5,7 @@ export const ROLES = {
   platformAdmin: 'platform-admin',
   tenantAdmin: 'tenant-admin',
   tenantMember: 'tenant-member',
+  customer: 'customer',
 } as const
 
 export type Role = (typeof ROLES)[keyof typeof ROLES]

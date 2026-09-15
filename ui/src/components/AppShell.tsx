@@ -6,8 +6,10 @@ import { ROLES } from '../types'
 // One persistent shell for every role — the nav links shown change, but there's
 // only ever one shell (spec §04), not a separate platform-admin layout.
 export function AppShell() {
-  const { me, hasRole, signOut } = useAuth()
+  const { me, hasRole, signOut, chooseDifferentTenant } = useAuth()
   const isPlatformAdmin = hasRole(ROLES.platformAdmin)
+  const isTenantStaff = hasRole(ROLES.tenantMember, ROLES.tenantAdmin)
+  const isCustomer = hasRole(ROLES.customer)
 
   return (
     <div className="shell">
@@ -18,14 +20,14 @@ export function AppShell() {
         </div>
         <nav className="topbar-nav">
           {!isPlatformAdmin && (
-            <>
-              <NavLink to="/products" className={navClass}>
-                Products
-              </NavLink>
-              <NavLink to="/tenant" className={navClass}>
-                My tenant
-              </NavLink>
-            </>
+            <NavLink to="/products" className={navClass}>
+              Products
+            </NavLink>
+          )}
+          {isTenantStaff && (
+            <NavLink to="/tenant" className={navClass}>
+              My tenant
+            </NavLink>
           )}
           {isPlatformAdmin && (
             <NavLink to="/tenants" className={navClass}>
@@ -40,6 +42,11 @@ export function AppShell() {
               <RolePill key={r} role={r} />
             ))}
           </NavLink>
+          {isCustomer && (
+            <button type="button" className="btn" onClick={chooseDifferentTenant}>
+              Switch store
+            </button>
+          )}
           <button type="button" className="btn" onClick={signOut}>
             Sign out
           </button>

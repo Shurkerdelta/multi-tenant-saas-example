@@ -94,11 +94,20 @@ imported realm, or confirm it actually imported (check realm dropdown for
 |----------|-------------|---------|-----------------|
 | alice    | `Passw0rd!` | Acme    | tenant-admin    |
 | bob      | `Passw0rd!` | Acme    | tenant-member   |
+| dave     | `Passw0rd!` | *(picks one)* | customer  |
 | carol    | `Passw0rd!` | Globex  | tenant-admin    |
 | root     | `Passw0rd!` | *(none)*| platform-admin  |
 
 These are seeded for local demo purposes only — obviously don't ship a realm export
 with hardcoded passwords to anywhere real.
+
+`dave`'s account carries no fixed tenant — a customer isn't attached to one tenant at
+all. After signing in they pick any active tenant from a directory
+(`GET /api/tenants/directory`) and browse that tenant's catalog for the rest of the
+session (sent back on each request as an `X-Tenant-Id` header); they can switch to a
+different tenant at any time. See
+[`TenantResolutionMiddleware`](src/MultiTenantSaas.Api/Middleware/TenantResolutionMiddleware.cs)
+for how this differs from staff, whose tenant is fixed on their account.
 
 Open [`requests.http`](requests.http) (VS Code REST Client extension, or copy the
 `curl` shape below) for a full walkthrough: Alice creates a product, Carol (different

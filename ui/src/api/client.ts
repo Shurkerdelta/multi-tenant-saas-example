@@ -22,6 +22,17 @@ export function registerTenantSuspendedHandler(handler: () => void) {
 
 const TENANT_SUSPENDED_MESSAGE = 'Tenant not found or inactive.'
 
+// A Customer carries no tenant_id claim on their token at all (see
+// TenantResolutionMiddleware) — instead they pick a tenant client-side and it's sent
+// on every request via this header. Staff ignore it entirely; the API only ever
+// consults it when the token itself has no tenant_id claim.
+const TENANT_HEADER = 'X-Tenant-Id'
+let selectedTenantId: string | null = null
+
+export function setSelectedTenantId(id: string | null) {
+  selectedTenantId = id
+}
+
 async function authHeader(): Promise<HeadersInit> {
   try {
     // Refreshes if the token has less than 30s left; throws if the refresh token
@@ -40,6 +51,7 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
     ...init,
     headers: {
       ...auth,
+      ...(selectedTenantId ? { [TENANT_HEADER]: selectedTenantId } : {}),
       ...(init.body ? { 'Content-Type': 'application/json' } : {}),
       ...init.headers,
     },

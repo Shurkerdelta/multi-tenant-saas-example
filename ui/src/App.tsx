@@ -16,6 +16,9 @@ import { TenantsList } from './pages/tenants/TenantsList'
 import { TenantCreatePage } from './pages/tenants/TenantCreatePage'
 
 const TENANT_STAFF = [ROLES.tenantMember, ROLES.tenantAdmin]
+// A customer can view their tenant's catalog but never manage it — see
+// ProductsController.CanView on the API side, which this mirrors.
+const PRODUCT_VIEWERS = [...TENANT_STAFF, ROLES.customer]
 
 export function App() {
   return (
@@ -31,7 +34,7 @@ export function App() {
             <Route
               path="/products"
               element={
-                <RoleRoute allow={TENANT_STAFF}>
+                <RoleRoute allow={PRODUCT_VIEWERS}>
                   <ProductsList />
                 </RoleRoute>
               }
@@ -47,7 +50,7 @@ export function App() {
             <Route
               path="/products/:id"
               element={
-                <RoleRoute allow={TENANT_STAFF}>
+                <RoleRoute allow={PRODUCT_VIEWERS}>
                   <ProductDetailPage />
                 </RoleRoute>
               }

@@ -7,7 +7,8 @@
     "realm": [
       { "name": "platform-admin", "description": "Cross-tenant platform administrator" },
       { "name": "tenant-admin", "description": "Full access within their own tenant" },
-      { "name": "tenant-member", "description": "Standard member access within their own tenant" }
+      { "name": "tenant-member", "description": "Standard member access within their own tenant" },
+      { "name": "customer", "description": "Read-only access to their own tenant's products" }
     ]
   },
   "clients": [
@@ -75,6 +76,16 @@
       "credentials": [{ "type": "password", "value": "Passw0rd!", "temporary": false }],
       "realmRoles": ["tenant-member"],
       "attributes": { "tenant_id": ["11111111-1111-1111-1111-111111111111"] }
+    },
+    {
+      "username": "dave",
+      "email": "dave@acme.example",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Dave",
+      "lastName": "Doyle",
+      "credentials": [{ "type": "password", "value": "Passw0rd!", "temporary": false }],
+      "realmRoles": ["customer"]
     },
     {
       "username": "carol",

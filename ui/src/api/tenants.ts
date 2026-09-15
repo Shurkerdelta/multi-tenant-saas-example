@@ -9,6 +9,12 @@ export function listTenants() {
   return apiFetch<TenantResponse[]>('/tenants')
 }
 
+// The picker a customer sees after signing in — active tenants only, since there's
+// nothing to browse in a deactivated one.
+export function listTenantDirectory() {
+  return apiFetch<TenantResponse[]>('/tenants/directory')
+}
+
 export function createTenant(values: CreateTenantValues) {
   return apiFetch<TenantResponse>('/tenants', {
     method: 'POST',
