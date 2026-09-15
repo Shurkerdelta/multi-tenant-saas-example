@@ -29,12 +29,6 @@ other.
 9. **Product search, filtering, pagination.** Fine at demo scale; do API and UI
    together once a real tenant's catalog outgrows one screen.
 
-## Intentional non-goals (not on this backlog)
-
-- **Member/user management within a tenant** — Keycloak's own admin console owns
-  this; the Tenant Console has no reason to duplicate it.
-- **Password reset / MFA** — stays on Keycloak's hosted pages, never in-app.
-
 ## Priority
 
 #1 and #2 unblock the most — both the deactivation UI and tenant self-editing UI
