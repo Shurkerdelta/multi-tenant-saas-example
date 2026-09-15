@@ -13,6 +13,11 @@ namespace MultiTenantSaas.Api.Controllers;
 /// here — AppDbContext's global query filter takes care of it, and SaveChanges stamps/
 /// validates TenantId. Requesting another tenant's product id returns 404 (not 403),
 /// which avoids confirming to a caller that the id even exists in another tenant.
+///
+/// Read access (<see cref="CanView"/>) includes Customer alongside staff roles — a
+/// customer only ever sees their own tenant's catalog, same as everyone else here.
+/// Write access stays staff-only: members and admins can create, only admins can
+/// edit or delete.
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
@@ -26,7 +31,10 @@ public class ProductsController : ControllerBase
         _db = db;
     }
 
+    private const string CanView = $"{Roles.TenantAdmin},{Roles.TenantMember},{Roles.Customer}";
+
     [HttpGet]
+    [Authorize(Roles = CanView)]
     public async Task<ActionResult<IEnumerable<ProductResponse>>> GetAll(CancellationToken ct)
     {
         var products = await _db.Products
@@ -37,6 +45,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = CanView)]
     public async Task<ActionResult<ProductResponse>> GetById(Guid id, CancellationToken ct)
     {
         var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id, ct);

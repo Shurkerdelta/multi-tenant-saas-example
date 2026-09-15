@@ -94,6 +94,7 @@ imported realm, or confirm it actually imported (check realm dropdown for
 |----------|-------------|---------|-----------------|
 | alice    | `Passw0rd!` | Acme    | tenant-admin    |
 | bob      | `Passw0rd!` | Acme    | tenant-member   |
+| dave     | `Passw0rd!` | Acme    | customer        |
 | carol    | `Passw0rd!` | Globex  | tenant-admin    |
 | root     | `Passw0rd!` | *(none)*| platform-admin  |
 
