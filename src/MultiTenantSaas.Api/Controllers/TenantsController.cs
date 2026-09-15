@@ -49,6 +49,25 @@ public class TenantsController : ControllerBase
         return Ok(tenants.Select(TenantResponse.FromEntity));
     }
 
+    /// <summary>
+    /// The tenant picker a Customer sees after signing in: unlike <see cref="GetAll"/>,
+    /// this is scoped to Customer (not platform-admin) and only shows active tenants —
+    /// there's nothing to browse in a deactivated one. [SkipTenantResolution] because a
+    /// Customer has no tenant resolved yet at the point they're choosing one.
+    /// </summary>
+    [HttpGet("directory")]
+    [Authorize(Roles = Roles.Customer)]
+    [SkipTenantResolution]
+    public async Task<ActionResult<IEnumerable<TenantResponse>>> GetDirectory(CancellationToken ct)
+    {
+        var tenants = await _db.Tenants
+            .Where(t => t.IsActive)
+            .OrderBy(t => t.Name)
+            .ToListAsync(ct);
+
+        return Ok(tenants.Select(TenantResponse.FromEntity));
+    }
+
     [HttpPost]
     [Authorize(Roles = Roles.PlatformAdmin)]
     [SkipTenantResolution]

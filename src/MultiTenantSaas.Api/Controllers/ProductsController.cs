@@ -15,7 +15,8 @@ namespace MultiTenantSaas.Api.Controllers;
 /// which avoids confirming to a caller that the id even exists in another tenant.
 ///
 /// Read access (<see cref="CanView"/>) includes Customer alongside staff roles — a
-/// customer only ever sees their own tenant's catalog, same as everyone else here.
+/// customer only ever sees whichever tenant they've currently selected (see
+/// TenantResolutionMiddleware), scoped the same way as everyone else here.
 /// Write access stays staff-only: members and admins can create, only admins can
 /// edit or delete.
 /// </summary>

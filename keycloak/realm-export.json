@@ -85,8 +85,7 @@
       "firstName": "Dave",
       "lastName": "Doyle",
       "credentials": [{ "type": "password", "value": "Passw0rd!", "temporary": false }],
-      "realmRoles": ["customer"],
-      "attributes": { "tenant_id": ["11111111-1111-1111-1111-111111111111"] }
+      "realmRoles": ["customer"]
     },
     {
       "username": "carol",

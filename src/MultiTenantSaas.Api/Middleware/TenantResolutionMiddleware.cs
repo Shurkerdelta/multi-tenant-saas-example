@@ -15,11 +15,21 @@ namespace MultiTenantSaas.Api.Middleware;
 /// being suspended (tokens are typically valid for minutes; revoking a tenant should
 /// take effect immediately).
 ///
+/// Staff (tenant-admin/tenant-member) carry a fixed <c>tenant_id</c> token claim and
+/// are always resolved from it. A Customer carries no <c>tenant_id</c> claim at all —
+/// they pick a tenant to browse client-side (see TenantsController.GetDirectory) and
+/// send it on each request via the <c>X-Tenant-Id</c> header instead. Either way the
+/// requested id is looked up and validated the same way; the header is only ever
+/// consulted when the token itself has no claim, so it can't override a staff
+/// member's actual assignment.
+///
 /// Must run after UseAuthentication (needs context.User) and after UseRouting (needs
 /// context.GetEndpoint() for the [SkipTenantResolution] / [AllowAnonymous] checks).
 /// </summary>
 public class TenantResolutionMiddleware
 {
+    private const string TenantHeaderName = "X-Tenant-Id";
+
     private readonly RequestDelegate _next;
 
     public TenantResolutionMiddleware(RequestDelegate next)
@@ -51,15 +61,56 @@ public class TenantResolutionMiddleware
             return;
         }
 
-        if (string.IsNullOrEmpty(tenantIdClaim) || !Guid.TryParse(tenantIdClaim, out var tenantId))
+        Guid? requestedTenantId;
+
+        if (!string.IsNullOrEmpty(tenantIdClaim))
         {
+            if (!Guid.TryParse(tenantIdClaim, out var claimedTenantId))
+            {
+                await WriteForbiddenAsync(context, "Missing or invalid 'tenant_id' claim on access token.");
+                return;
+            }
+
+            requestedTenantId = claimedTenantId;
+        }
+        else if (context.User.IsInRole(Roles.Customer))
+        {
+            var headerValue = context.Request.Headers[TenantHeaderName].FirstOrDefault();
+
+            if (string.IsNullOrEmpty(headerValue))
+            {
+                // Hasn't chosen a tenant yet — let the request through unscoped rather
+                // than erroring, so e.g. /api/me can report that back to the UI and it
+                // can show a picker instead of a broken page.
+                requestedTenantId = null;
+            }
+            else if (!Guid.TryParse(headerValue, out var selectedTenantId))
+            {
+                await WriteForbiddenAsync(context, $"Invalid '{TenantHeaderName}' header.");
+                return;
+            }
+            else
+            {
+                requestedTenantId = selectedTenantId;
+            }
+        }
+        else
+        {
+            // Staff role with no tenant_id claim at all — a real misconfiguration,
+            // not a "hasn't chosen yet" state like it is for a Customer.
             await WriteForbiddenAsync(context, "Missing or invalid 'tenant_id' claim on access token.");
+            return;
+        }
+
+        if (requestedTenantId is null)
+        {
+            await _next(context);
             return;
         }
 
         var tenant = await db.Tenants
             .AsNoTracking()
-            .FirstOrDefaultAsync(t => t.Id == tenantId, context.RequestAborted);
+            .FirstOrDefaultAsync(t => t.Id == requestedTenantId, context.RequestAborted);
 
         if (tenant is null || !tenant.IsActive)
         {
