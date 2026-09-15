@@ -20,13 +20,12 @@ other.
    anywhere.
 6. **Secrets out of `appsettings.Development.json`.** User-secrets, env vars, or a
    vault for anything beyond local dev.
-7. ~~Auth flow: Authorization Code + PKCE~~ — done (Tenant Console UI).
 
 ## Frontend / Tenant Console
 
-8. **Tenant self-editing** (rename, change slug). Same root cause as #1/#2 — no
+7. **Tenant self-editing** (rename, change slug). Same root cause as #1/#2 — no
    endpoint yet.
-9. **Product search, filtering, pagination.** Fine at demo scale; do API and UI
+8. **Product search, filtering, pagination.** Fine at demo scale; do API and UI
    together once a real tenant's catalog outgrows one screen.
 
 ## Priority
