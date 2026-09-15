@@ -8,6 +8,7 @@ import { ROLES } from '../types'
 export function AppShell() {
   const { me, hasRole, signOut } = useAuth()
   const isPlatformAdmin = hasRole(ROLES.platformAdmin)
+  const isTenantStaff = hasRole(ROLES.tenantMember, ROLES.tenantAdmin)
 
   return (
     <div className="shell">
@@ -18,14 +19,14 @@ export function AppShell() {
         </div>
         <nav className="topbar-nav">
           {!isPlatformAdmin && (
-            <>
-              <NavLink to="/products" className={navClass}>
-                Products
-              </NavLink>
-              <NavLink to="/tenant" className={navClass}>
-                My tenant
-              </NavLink>
-            </>
+            <NavLink to="/products" className={navClass}>
+              Products
+            </NavLink>
+          )}
+          {isTenantStaff && (
+            <NavLink to="/tenant" className={navClass}>
+              My tenant
+            </NavLink>
           )}
           {isPlatformAdmin && (
             <NavLink to="/tenants" className={navClass}>

@@ -17,6 +17,8 @@
   --role-admin-soft: #deeaf4;
   --role-member: #4b647a;
   --role-member-soft: #e2e8ee;
+  --role-customer: #2f7a6b;
+  --role-customer-soft: #dcefe9;
   --success: #2c7a4b;
   --success-soft: #dcefe2;
   --danger: #b23a3a;
@@ -42,6 +44,8 @@
     --role-admin-soft: #1f2e3e;
     --role-member: #9db0c2;
     --role-member-soft: #242a34;
+    --role-customer: #63b3a2;
+    --role-customer-soft: #1b332d;
     --success: #66c08d;
     --success-soft: #1b3325;
     --danger: #e68484;
@@ -67,6 +71,8 @@
   --role-admin-soft: #1f2e3e;
   --role-member: #9db0c2;
   --role-member-soft: #242a34;
+  --role-customer: #63b3a2;
+  --role-customer-soft: #1b332d;
   --success: #66c08d;
   --success-soft: #1b3325;
   --danger: #e68484;
@@ -310,6 +316,7 @@ td.dim { color: var(--ink-faint); }
 }
 .pill::before { content: ''; width: 6px; height: 6px; border-radius: 99px; background: currentColor; }
 .pill.member { background: var(--role-member-soft); color: var(--role-member); }
+.pill.customer { background: var(--role-customer-soft); color: var(--role-customer); }
 .pill.admin { background: var(--role-admin-soft); color: var(--role-admin); }
 .pill.platform { background: var(--role-platform-soft); color: var(--role-platform); }
 .pill.status-active { background: var(--success-soft); color: var(--success); }

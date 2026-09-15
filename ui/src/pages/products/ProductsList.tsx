@@ -4,12 +4,16 @@ import { listProducts } from '../../api/products'
 import type { ProductResponse } from '../../types'
 import { EmptyState, ErrorState, SkeletonRows } from '../../components/States'
 import { useAuth } from '../../auth/AuthContext'
+import { ROLES } from '../../types'
 
 const currency = new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' })
 const dateFormat = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' })
 
 export function ProductsList() {
-  const { me } = useAuth()
+  const { me, hasRole } = useAuth()
+  // A customer can browse the catalog but never manage it — the API's own CanView
+  // vs. write-role split (ProductsController.cs) is what this mirrors.
+  const canCreate = hasRole(ROLES.tenantMember, ROLES.tenantAdmin)
   const location = useLocation()
   const [products, setProducts] = useState<ProductResponse[] | null>(null)
   const [error, setError] = useState(false)
@@ -33,9 +37,11 @@ export function ProductsList() {
           <h1>Products</h1>
           <p className="page-sub">{me.tenantSlug ? `Catalog for ${me.tenantSlug}` : 'Your catalog'}</p>
         </div>
-        <Link to="/products/new" className="btn primary">
-          Add product
-        </Link>
+        {canCreate && (
+          <Link to="/products/new" className="btn primary">
+            Add product
+          </Link>
+        )}
       </div>
 
       {error ? (
@@ -77,9 +83,11 @@ export function ProductsList() {
               title="No products yet"
               body="Products your tenant adds will show up here."
               action={
-                <Link to="/products/new" className="btn primary">
-                  Add product
-                </Link>
+                canCreate ? (
+                  <Link to="/products/new" className="btn primary">
+                    Add product
+                  </Link>
+                ) : undefined
               }
             />
           )}
